@@ -1,8 +1,8 @@
-# Sequence Primary Drop Sale 1155 Boilerplate
+# Sequence Primary Drop Sale 721 Boilerplate
 
 ## Coming soon!
 
-Starter Sequence boilerplate demonstrating how to perform primary sales of 1155 NFTs using Sequence.
+Starter Sequence boilerplate demonstrating how to perform primary sales of 721 NFTs using Sequence.
 
 ## Quickstart
 
