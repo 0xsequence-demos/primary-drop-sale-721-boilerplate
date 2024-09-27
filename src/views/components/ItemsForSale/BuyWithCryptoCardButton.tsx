@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { ContractInfo } from "@0xsequence/indexer";
 
 interface BuyWithCryptoCardButtonProps {
-  tokenId: string;
+  // tokenId: string;
   collectionAddress: string;
   chainId: number;
   amount: number;
@@ -30,12 +30,12 @@ interface BuyWithCryptoCardButtonProps {
   currencyData: ContractInfo | undefined;
   refetchCollectionBalance: () => void;
   refetchTotalMinted: () => void;
-  refetchNftsMinted: () => void;
+  // refetchNftsMinted: () => void;
 }
 
 export const BuyWithCryptoCardButton = ({
-  tokenId,
-  // collectionAddress,
+  // tokenId,
+  collectionAddress,
   chainId,
   amount,
   resetAmount,
@@ -47,7 +47,7 @@ export const BuyWithCryptoCardButton = ({
   currencyData,
   refetchCollectionBalance,
   refetchTotalMinted,
-  refetchNftsMinted,
+  // refetchNftsMinted,
 }: BuyWithCryptoCardButtonProps) => {
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
@@ -120,10 +120,8 @@ export const BuyWithCryptoCardButton = ({
       functionName: "mint",
       args: [
         userAddress,
-        [BigInt(tokenId)],
         // Amount of nfts that are going to be purchased
         [BigInt(amount)],
-        toHex(0),
         currencyData.address,
         // Here the exact price of the NFTs must be established (USDC = 6 decimals) (Native currency = 18 decimals)
         totalPrice,
@@ -181,7 +179,7 @@ export const BuyWithCryptoCardButton = ({
     setTimeout(() => {
       refetchCollectionBalance();
       refetchTotalMinted();
-      refetchNftsMinted();
+      // refetchNftsMinted();
     }, 3000);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [txnData, isPendingSendTxn]);

@@ -63,7 +63,7 @@ const Connected = () => {
     isLoading: tokenSaleDetailsDataIsLoading,
   } = useReadContract({
     abi: SALES_CONTRACT_ABI,
-    functionName: "globalSaleDetails",
+    functionName: "saleDetails",
     chainId: chainId,
     address: saleConfiguration.salesContractAddress,
   });
@@ -323,20 +323,20 @@ const Connected = () => {
             />
           </Collapsible>
         )}
-      <ItemsForSale
-        chainId={saleConfiguration.chainId}
-        collectionAddress={saleConfiguration.nftTokenAddress}
-        totalMinted={formattedNftsMinted}
-        totalSupply={totalSupply}
-        totalMintedNftsPercentaje={totalMintedNftsPercentaje}
-        userPaymentCurrencyBalance={userPaymentCurrencyBalance}
-        price={price}
-        currencyDecimals={currencyDecimals}
-        currencyData={currencyData}
-        currencyIsLoading={currencyDataIsLoading}
-        saleConfiguration={saleConfiguration}
-        refetchTotalMinted={refetchTotalMinted}
-      />
+        <ItemsForSale
+          chainId={saleConfiguration.chainId}
+          collectionAddress={saleConfiguration.nftTokenAddress}
+          totalMinted={formattedNftsMinted}
+          totalSupply={totalSupply}
+          totalMintedNftsPercentaje={totalMintedNftsPercentaje}
+          userPaymentCurrencyBalance={userPaymentCurrencyBalance}
+          price={price}
+          currencyDecimals={currencyDecimals}
+          currencyData={currencyData}
+          currencyIsLoading={currencyDataIsLoading}
+          saleConfiguration={saleConfiguration}
+          refetchTotalMinted={refetchTotalMinted}
+        />
 
       <Button label="Disconnect" onClick={disconnect} />
     </Card>

@@ -47,15 +47,18 @@ export const ItemsForSale = ({
     includeMetadata: false,
     verifiedOnly: false,
   });
-  const { data: tokenMetadatas, isLoading: tokenMetadatasLoading } =
-    useTokenMetadata(
-      chainId,
-      collectionAddress,
-      saleConfiguration.itemsForSale.map((item) => item.tokenId),
-    );
+  // console.log(collectionBalanceData, "dt")
+  // const { data: tokenMetadatas, isLoading: tokenMetadatasLoading } =
+  //   useTokenMetadata(
+  //     chainId,
+  //     collectionAddress,
+  //     saleConfiguration.itemsForSale.map((item) => item.tokenId),
+  //   );
+
+  // console.log(tokenMetadatas)
 
   const isLoading =
-    tokenMetadatasLoading || collectionBalanceIsLoading || currencyIsLoading;
+    collectionBalanceIsLoading || currencyIsLoading;
 
   if (isLoading) {
     return (
@@ -80,7 +83,22 @@ export const ItemsForSale = ({
           Available items
         </Text>
       </Box>
-      <Box
+      <Collectible
+        // collectibleBalance={collectibleBalance}
+        // tokenMetadata={tokenMetadata}
+        chainId={chainId}
+        currencyData={currencyData}
+        totalMintedNftsPercentaje={totalMintedNftsPercentaje}
+        totalSupply={totalSupply}
+        totalNftsMinted={totalMinted}
+        userPaymentCurrencyBalance={userPaymentCurrencyBalance}
+        price={price}
+        currencyDecimals={currencyDecimals}
+        saleConfiguration={saleConfiguration}
+        refetchCollectionBalance={refetchCollectionBalance}
+        refetchTotalMinted={refetchTotalMinted}
+      />
+      {/* <Box
         flexDirection={"row"}
         alignItems="center"
         flexWrap="wrap"
@@ -111,7 +129,7 @@ export const ItemsForSale = ({
             />
           );
         })}
-      </Box>
+      </Box> */}
     </Box>
   );
 };
