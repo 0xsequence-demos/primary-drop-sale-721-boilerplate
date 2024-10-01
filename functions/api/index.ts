@@ -28,10 +28,19 @@ export default {
         });
 
       case "/create-token":
-        return createToken(env);
+        if (request.method !== "POST") {
+          return new Response(
+            JSON.stringify({ result: "Method not allowed" }),
+            { status: 405, headers: { "Content-Type": "application/json" } }
+          );
+        }
+        return createToken(request, env);
 
       default:
-        return new Response("Not found", { status: 404 });
+        return new Response(JSON.stringify({ result: "Not found" }), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
     }
   },
 };

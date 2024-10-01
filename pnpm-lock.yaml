@@ -32,9 +32,6 @@ importers:
       '@0xsequence/network':
         specifier: ^1.10.12
         version: 1.10.12(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
-      '@0xsequence/utils':
-        specifier: ^2.0.10
-        version: 2.0.10(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
       '@tanstack/react-query':
         specifier: ^5.51.23
         version: 5.51.23(react@18.3.1)
@@ -231,11 +228,6 @@ packages:
     resolution: {integrity: sha512-4YFM6a3HuECwaBIeG1/mmZvA+aMqD5NmRw8yXJb/j91m3U7mTIC7oF6HSYBORR6neJZSKDCNE5mmfBA3aBAI7g==}
     peerDependencies:
       ethers: '>=5.5 < 6'
-
-  '@0xsequence/utils@2.0.10':
-    resolution: {integrity: sha512-uHNQHqVE8xPZ7axq/tTLu4PiPDkZd9WRQcJgC9SBU++GbEIdlTS9+gEyNaedTaXLUjOKLx6KojX6vvmI16CuBQ==}
-    peerDependencies:
-      ethers: '>=6'
 
   '@0xsequence/waas@1.10.3':
     resolution: {integrity: sha512-nIrhwDj7VIJevJIZTt4SqwtuZt/6KP7cMV5XGFiyd5Cx9lMNbEMMcR8q7kF6tLIqX5tCJKEOg1/9F4s13flF7g==}
@@ -6135,11 +6127,6 @@ snapshots:
       js-base64: 3.7.7
 
   '@0xsequence/utils@1.10.3(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
-    dependencies:
-      ethers: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      js-base64: 3.7.7
-
-  '@0xsequence/utils@2.0.10(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))':
     dependencies:
       ethers: 5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       js-base64: 3.7.7
