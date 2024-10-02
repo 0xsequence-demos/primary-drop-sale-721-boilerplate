@@ -78,11 +78,11 @@ export const ItemsForSale = ({
 
   return (
     <Box width="full">
-      <Box marginBottom="6">
+      {/* <Box marginBottom="6">
         <Text variant="xlarge" fontWeight="bold">
           Available items
         </Text>
-      </Box>
+      </Box> */}
       <Collectible
         // collectibleBalance={collectibleBalance}
         // tokenMetadata={tokenMetadata}
