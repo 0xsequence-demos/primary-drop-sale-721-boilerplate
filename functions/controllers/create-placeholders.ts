@@ -1,7 +1,8 @@
+
 import { SequenceCollections } from "@0xsequence/metadata";
 import { ethers } from "ethers";
 import { uploadAsset } from "../utils/uploadAsset";
-import { generateNFTsMetadata, getRandomImage, mergeAttributes } from "../utils/dataGenerators";
+import { generatePlaceholderMetadata, mergeAttributes } from "../utils/dataGenerators";
 
 async function createTokenIds(
   startTokenId,
@@ -22,7 +23,7 @@ async function createTokenIds(
 
   return await Promise.all(
     metadatas.map(async (metadata, index) => {
-      const { name, description, attributes } = metadata;
+      const { name, description, attributes, image } = metadata;
       try {
         const { token } = await collectionsService.createToken({
           projectId: projectId,
@@ -52,10 +53,10 @@ async function createTokenIds(
 
         await uploadAsset(
           projectId,
-          780,
+          collectionId,
           jsonCreateAsset.asset.id,
           "8",
-          getRandomImage(),
+          image,
           projectAccessKey,
           jwtAccessKey
         );
@@ -81,7 +82,7 @@ async function createTokenIds(
   );
 }
 
-export async function createToken(request, env) {
+export async function createPlaceholders(request, env) {
   const password = env.PASSWORD;
   const authHeader = request.headers.get("Authorization");
 
@@ -93,7 +94,7 @@ export async function createToken(request, env) {
   }
     
   const { quantity, startTokenId, collectionId } = await request.json();
-  if (!quantity?.toString() || !startTokenId?.toString() || !collectionId || typeof collectionId !== "number") {
+  if (!quantity?.toString() || !startTokenId?.toString() || !collectionId) {
     return new Response(JSON.stringify({ result: "Bad Request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -108,7 +109,7 @@ export async function createToken(request, env) {
     METADATA_URL,
     jwtAccessKey
   );
-  const metadatas = generateNFTsMetadata(quantity);
+  const metadatas = generatePlaceholderMetadata(quantity);
   const metadataStatuses = await createTokenIds(
     startTokenId,
     metadatas,

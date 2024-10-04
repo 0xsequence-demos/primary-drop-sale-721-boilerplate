@@ -2,6 +2,8 @@ const axeImage =
   "https://metadata.sequence.app/projects/30957/collections/690/tokens/0/image.png";
 const alternativeAxeImage =
   "https://metadata.sequence.app/projects/30957/collections/690/tokens/1/image.png";
+const chestImage =
+  "https://res.cloudinary.com/richardiral/image/upload/v1727980612/chestimage.png";
 
 export function mergeAttributes(attributes: { [key: string]: number }[]) {
   if (attributes.length === 0) return null;
@@ -92,6 +94,17 @@ export function generateNFTsMetadata(count: number) {
     description: generateAxeDescription(),
     image: getRandomImage(),
     attributes: generateAxeAttributes(4),
+  }));
+
+  return metadatas;
+}
+
+export function generatePlaceholderMetadata(count: number) {
+  const metadatas = Array.from({ length: count }, () => ({
+    name: "Chest",
+    description: "Placeholder NFT",
+    image: chestImage,
+    attributes: [],
   }));
 
   return metadatas;

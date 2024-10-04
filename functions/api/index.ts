@@ -1,5 +1,5 @@
 /**
- * Welcome to Cloudflare Workers! This is your first worker.
+ * Welcome to Cloudflare Workers!
  *
  * - Run `npm run dev` in your terminal to start a development server
  * - Open a browser tab at http://localhost:8787/ to see your worker in action
@@ -11,7 +11,9 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+import { createPlaceholders } from "../controllers/create-placeholders";
 import { createToken } from "../controllers/create-token";
+import { updateMetadatas } from "../controllers/update-metadatas";
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
@@ -35,6 +37,24 @@ export default {
           );
         }
         return createToken(request, env);
+
+      case "/create-placeholders":
+        if (request.method !== "POST") {
+          return new Response(
+            JSON.stringify({ result: "Method not allowed" }),
+            { status: 405, headers: { "Content-Type": "application/json" } }
+          );
+        }
+        return createPlaceholders(request, env);
+
+      case "/update-metadatas":
+        if (request.method !== "PUT") {
+          return new Response(
+            JSON.stringify({ result: "Method not allowed" }),
+            { status: 405, headers: { "Content-Type": "application/json" } }
+          );
+        }
+        return updateMetadatas(request, env);
 
       default:
         return new Response(JSON.stringify({ result: "Not found" }), {

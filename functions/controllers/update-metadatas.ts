@@ -1,18 +1,21 @@
 import { SequenceCollections } from "@0xsequence/metadata";
-import { ethers } from "ethers";
-import { uploadAsset } from "../utils/uploadAsset";
-import { generateNFTsMetadata, getRandomImage, mergeAttributes } from "../utils/dataGenerators";
+import { generateNFTsMetadata, getRandomImage } from "../utils/dataGenerators";
+import { updateAsset } from "../utils/updateAsset";
 
-async function createTokenIds(
-  startTokenId,
+function findAssetWithImageField(data: { assets: { metadataField: string, id: string }[] }) {
+  const asset = data.assets.find(asset => asset.metadataField === 'image');
+  return asset ? asset.id : null;
+}
+
+async function updateTokenIds(
   metadatas: any[],
+	originalMetadatas,
   collectionsService,
   projectId,
   collectionId,
   projectAccessKey,
   jwtAccessKey
 ) {
-  if (startTokenId < 0) throw new Error("Invalid startTokenId");
   if (metadatas.length > 500)
     throw new Error(
       "Invalid metadatas length. Please send maximum 500 metadatas."
@@ -22,39 +25,15 @@ async function createTokenIds(
 
   return await Promise.all(
     metadatas.map(async (metadata, index) => {
-      const { name, description, attributes } = metadata;
+			const assetId = findAssetWithImageField(originalMetadatas[index]);
+			const tokenId = originalMetadatas[index].token?.tokenId;
+      
       try {
-        const { token } = await collectionsService.createToken({
-          projectId: projectId,
-          collectionId,
-          token: {
-            tokenId: (index + startTokenId).toString(),
-            name,
-            description,
-            decimals: 0,
-            properties: mergeAttributes(attributes),
-          },
-        });
-
-        const randomTokenIDSpace = ethers.BigNumber.from(
-          ethers.utils.hexlify(ethers.utils.randomBytes(20))
-        );
-
-        const jsonCreateAsset = await collectionsService.createAsset({
-          projectId: projectId,
-          asset: {
-            id: Number(String(randomTokenIDSpace).slice(0, 10)),
-            collectionId,
-            tokenId: (index + startTokenId).toString(),
-            metadataField: "image",
-          },
-        });
-
-        await uploadAsset(
+        await updateAsset(
           projectId,
-          780,
-          jsonCreateAsset.asset.id,
-          "8",
+          collectionId,
+          assetId,
+          tokenId,
           getRandomImage(),
           projectAccessKey,
           jwtAccessKey
@@ -64,27 +43,26 @@ async function createTokenIds(
           projectId: projectId,
           collectionId: collectionId,
           private: false,
-          tokenId: token.tokenId,
-          token: { ...token },
+          tokenId,
+          token: { ...metadata, tokenId },
         };
-
+        
         const data = await collectionsService.updateToken(updateTokenBody);
 
         return data;
       } catch (error) {
         return {
           ...error,
-          tokenId: index + startTokenId,
+          tokenId: metadata.token.tokenId,
         };
       }
     })
   );
 }
 
-export async function createToken(request, env) {
+export async function updateMetadatas(request, env) {
   const password = env.PASSWORD;
   const authHeader = request.headers.get("Authorization");
-
   if (authHeader !== `Bearer ${password}`) {
     return new Response(JSON.stringify({ result: "Unauthorized" }), {
       status: 401,
@@ -92,8 +70,8 @@ export async function createToken(request, env) {
     });
   }
     
-  const { quantity, startTokenId, collectionId } = await request.json();
-  if (!quantity?.toString() || !startTokenId?.toString() || !collectionId || typeof collectionId !== "number") {
+  const { collectionId } = await request.json();
+  if (!collectionId || typeof collectionId !== "number") {
     return new Response(JSON.stringify({ result: "Bad Request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
@@ -108,18 +86,41 @@ export async function createToken(request, env) {
     METADATA_URL,
     jwtAccessKey
   );
-  const metadatas = generateNFTsMetadata(quantity);
-  const metadataStatuses = await createTokenIds(
-    startTokenId,
+	
+	const metadatasFromApi = await collectionsService.listTokens({
+    projectId,
+    collectionId: collectionId,
+    page: {
+        // We can improve this. (I expect to use 'quantity')
+        pageSize: 10000,
+    }
+  });
+
+	const metadatasFromApiTwo = await Promise.all(
+    metadatasFromApi?.tokens?.map(async (metadata) => {
+      return await collectionsService.getToken({
+        projectId,
+        collectionId: collectionId,
+        tokenId: metadata.tokenId,
+      });
+    })
+  );
+
+	const formmatedOriginalMetadata = metadatasFromApiTwo.filter((metadata) => metadata?.assets?.length !== 0 && metadata?.assets?.find((assetData) => assetData.metadataField === "image"));
+  const metadatas = generateNFTsMetadata(formmatedOriginalMetadata.length);
+ 
+  const metadataStatuses = await updateTokenIds(
     metadatas,
+		formmatedOriginalMetadata,
     collectionsService,
     projectId,
     collectionId,
     projectAccessKey,
     jwtAccessKey
   );
+
   const data = {
-    message: "Created Tokens",
+    message: "Updated Tokens",
     status: "success",
     metadataStatuses,
   };
