@@ -15,6 +15,13 @@ import { createPlaceholders } from "../controllers/create-placeholders";
 import { createToken } from "../controllers/create-token";
 import { updateMetadatas } from "../controllers/update-metadatas";
 
+const methodNotAllowed = (allowedMethods: string[]) => {
+  return new Response(
+    JSON.stringify({ result: "Method not allowed", allowedMethods }),
+    { status: 405, headers: { "Content-Type": "application/json" } }
+  );
+};
+
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
@@ -31,28 +38,19 @@ export default {
 
       case "/create-token":
         if (request.method !== "POST") {
-          return new Response(
-            JSON.stringify({ result: "Method not allowed" }),
-            { status: 405, headers: { "Content-Type": "application/json" } }
-          );
+          return methodNotAllowed(["POST"]);
         }
         return createToken(request, env);
 
       case "/create-placeholders":
         if (request.method !== "POST") {
-          return new Response(
-            JSON.stringify({ result: "Method not allowed" }),
-            { status: 405, headers: { "Content-Type": "application/json" } }
-          );
+          return methodNotAllowed(["POST"]);
         }
         return createPlaceholders(request, env);
 
       case "/update-metadatas":
         if (request.method !== "PUT") {
-          return new Response(
-            JSON.stringify({ result: "Method not allowed" }),
-            { status: 405, headers: { "Content-Type": "application/json" } }
-          );
+          return methodNotAllowed(["PUT"]);
         }
         return updateMetadatas(request, env);
 
