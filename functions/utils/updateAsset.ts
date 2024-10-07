@@ -1,11 +1,12 @@
 export const updateAsset = async (
-  projectID: any,
-  collectionID: any,
+  projectID: number,
+  collectionID: number | string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assetID: any,
-  tokenID: any,
-  url: any,
+  tokenID: number | string,
+  url: string,
   projectAccessKey: string,
-  jwtAccessKey: string
+  jwtAccessKey: string,
 ) => {
   const response = await fetch(url);
   if (!response.ok)
@@ -17,7 +18,7 @@ export const updateAsset = async (
 
   formData.append("file", blob, `image.png`); // You might want to dynamically determine the filename
 
-  let METADATA_URL = "https://metadata.sequence.app";
+  const METADATA_URL = "https://metadata.sequence.app";
 
   // Construct the endpoint URL
   const endpointURL = `${METADATA_URL}/projects/${projectID}/collections/${collectionID}/tokens/${tokenID}/upload/${assetID}`;

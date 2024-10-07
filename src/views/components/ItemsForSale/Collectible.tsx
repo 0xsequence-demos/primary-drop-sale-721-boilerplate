@@ -6,28 +6,18 @@ import {
   Text,
   useMediaQuery,
 } from "@0xsequence/design-system";
-import CollectibleTileImage from "../CollectibleTileImage";
 import { BuyWithCryptoCardButton } from "./BuyWithCryptoCardButton";
 import { useEffect, useState } from "react";
-import { ContractInfo, TokenMetadata } from "@0xsequence/indexer";
+import { ContractInfo } from "@0xsequence/indexer";
 import { toast } from "react-toastify";
-import { SendTransactionErrorType } from "viem";
-import NftsMintedProgressBar from "../NftsMintedProgressBar";
-import { NFT_TOKEN_CONTRACT_ABI } from "../../../utils/primarySales/abis/nftTokenContractAbi";
-import { useReadContract } from "wagmi";
 import PurchaseAnimation from "../blockchain/Connected/PurchaseAnimation";
 import { formatPriceWithDecimals } from "../../../utils/primarySales/helpers";
 import { UnpackedSaleConfigurationProps } from "../../../utils/primarySales/helpers";
+import { SendTransactionErrorType } from "viem";
 
 interface CollectibleProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  // collectibleBalance: { [key: string]: any } | undefined;
-  // tokenMetadata: TokenMetadata;
   chainId: number;
   currencyData: ContractInfo | undefined;
-  totalMintedNftsPercentaje: number;
-  totalSupply: string | 0;
-  totalNftsMinted: string | undefined;
   userPaymentCurrencyBalance: bigint | undefined;
   price: bigint;
   currencyDecimals: number | undefined;
@@ -36,21 +26,9 @@ interface CollectibleProps {
   refetchTotalMinted: () => void;
 }
 
-function calculateMintedPercentage(minted: number, totalMax: number): number {
-  if (totalMax <= 0) {
-    return 0;
-  }
-
-  const percentage = (minted / totalMax) * 100;
-  return Math.floor(percentage);
-}
-
 export const Collectible = ({
   chainId,
   currencyData,
-  totalMintedNftsPercentaje,
-  totalSupply,
-  totalNftsMinted,
   userPaymentCurrencyBalance,
   price,
   currencyDecimals,
@@ -63,7 +41,7 @@ export const Collectible = ({
   const [txExplorerUrl, setTxExplorerUrl] = useState("");
   const [txError, setTxError] = useState<SendTransactionErrorType | null>(null);
   const [purchasingNft, setPurchasingNft] = useState<boolean>(false);
-  const logoURI = currencyData?.logoURI;
+  // const logoURI = currencyData?.logoURI;
 
   const formmatedPrice = currencyDecimals
     ? formatPriceWithDecimals(price, currencyDecimals)

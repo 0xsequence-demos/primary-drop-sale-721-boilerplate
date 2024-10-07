@@ -1,22 +1,25 @@
-
 import { SequenceCollections } from "@0xsequence/metadata";
 import { ethers } from "ethers";
 import { uploadAsset } from "../utils/uploadAsset";
-import { generatePlaceholderMetadata, mergeAttributes } from "../utils/dataGenerators";
+import {
+  generatePlaceholderMetadata,
+  mergeAttributes,
+} from "../utils/dataGenerators";
 
 async function createTokenIds(
   startTokenId,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadatas: any[],
   collectionsService,
   projectId,
   collectionId,
   projectAccessKey,
-  jwtAccessKey
+  jwtAccessKey,
 ) {
   if (startTokenId < 0) throw new Error("Invalid startTokenId");
   if (metadatas.length > 500)
     throw new Error(
-      "Invalid metadatas length. Please send maximum 500 metadatas."
+      "Invalid metadatas length. Please send maximum 500 metadatas.",
     );
   if (!projectId || !collectionId)
     throw new Error("Empty fields in create token ids");
@@ -38,7 +41,7 @@ async function createTokenIds(
         });
 
         const randomTokenIDSpace = ethers.BigNumber.from(
-          ethers.utils.hexlify(ethers.utils.randomBytes(20))
+          ethers.utils.hexlify(ethers.utils.randomBytes(20)),
         );
 
         const jsonCreateAsset = await collectionsService.createAsset({
@@ -58,7 +61,7 @@ async function createTokenIds(
           "8",
           image,
           projectAccessKey,
-          jwtAccessKey
+          jwtAccessKey,
         );
 
         const updateTokenBody = {
@@ -78,7 +81,7 @@ async function createTokenIds(
           tokenId: index + startTokenId,
         };
       }
-    })
+    }),
   );
 }
 
@@ -92,14 +95,14 @@ export async function createPlaceholders(request, env) {
       headers: { "Content-Type": "application/json" },
     });
   }
-    
+
   const { quantity, startTokenId, collectionId } = await request.json();
   if (!quantity?.toString() || !startTokenId?.toString() || !collectionId) {
     return new Response(JSON.stringify({ result: "Bad Request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
-  };
+  }
 
   const METADATA_URL = "https://metadata.sequence.app";
   const jwtAccessKey = env.JWT_ACCESS_KEY;
@@ -107,7 +110,7 @@ export async function createPlaceholders(request, env) {
   const projectId = env.PROJECT_ID;
   const collectionsService = new SequenceCollections(
     METADATA_URL,
-    jwtAccessKey
+    jwtAccessKey,
   );
   const metadatas = generatePlaceholderMetadata(quantity);
   const metadataStatuses = await createTokenIds(
@@ -117,7 +120,7 @@ export async function createPlaceholders(request, env) {
     projectId,
     collectionId,
     projectAccessKey,
-    jwtAccessKey
+    jwtAccessKey,
   );
   const data = {
     message: "Created Tokens",

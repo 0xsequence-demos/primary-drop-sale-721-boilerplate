@@ -2,32 +2,35 @@ import { SequenceCollections } from "@0xsequence/metadata";
 import { generateNFTsMetadata, getRandomImage } from "../utils/dataGenerators";
 import { updateAsset } from "../utils/updateAsset";
 
-function findAssetWithImageField(data: { assets: { metadataField: string, id: string }[] }) {
-  const asset = data.assets.find(asset => asset.metadataField === 'image');
+function findAssetWithImageField(data: {
+  assets: { metadataField: string; id: string }[];
+}) {
+  const asset = data.assets.find((asset) => asset.metadataField === "image");
   return asset ? asset.id : null;
 }
 
 async function updateTokenIds(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadatas: any[],
-	originalMetadatas,
+  originalMetadatas,
   collectionsService,
   projectId,
   collectionId,
   projectAccessKey,
-  jwtAccessKey
+  jwtAccessKey,
 ) {
   if (metadatas.length > 500)
     throw new Error(
-      "Invalid metadatas length. Please send maximum 500 metadatas."
+      "Invalid metadatas length. Please send maximum 500 metadatas.",
     );
   if (!projectId || !collectionId)
     throw new Error("Empty fields in create token ids");
 
   return await Promise.all(
     metadatas.map(async (metadata, index) => {
-			const assetId = findAssetWithImageField(originalMetadatas[index]);
-			const tokenId = originalMetadatas[index].token?.tokenId;
-      
+      const assetId = findAssetWithImageField(originalMetadatas[index]);
+      const tokenId = originalMetadatas[index].token?.tokenId;
+
       try {
         await updateAsset(
           projectId,
@@ -36,7 +39,7 @@ async function updateTokenIds(
           tokenId,
           getRandomImage(),
           projectAccessKey,
-          jwtAccessKey
+          jwtAccessKey,
         );
 
         const updateTokenBody = {
@@ -46,7 +49,7 @@ async function updateTokenIds(
           tokenId,
           token: { ...metadata, tokenId },
         };
-        
+
         const data = await collectionsService.updateToken(updateTokenBody);
 
         return data;
@@ -56,7 +59,7 @@ async function updateTokenIds(
           tokenId: metadata.token.tokenId,
         };
       }
-    })
+    }),
   );
 }
 
@@ -69,14 +72,14 @@ export async function updateMetadatas(request, env) {
       headers: { "Content-Type": "application/json" },
     });
   }
-    
+
   const { collectionId } = await request.json();
   if (!collectionId || typeof collectionId !== "number") {
     return new Response(JSON.stringify({ result: "Bad Request" }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
-  };
+  }
 
   const METADATA_URL = "https://metadata.sequence.app";
   const jwtAccessKey = env.JWT_ACCESS_KEY;
@@ -84,39 +87,45 @@ export async function updateMetadatas(request, env) {
   const projectId = env.PROJECT_ID;
   const collectionsService = new SequenceCollections(
     METADATA_URL,
-    jwtAccessKey
+    jwtAccessKey,
   );
-	
-	const metadatasFromApi = await collectionsService.listTokens({
+
+  const metadatasFromApi = await collectionsService.listTokens({
     projectId,
     collectionId: collectionId,
     page: {
-        // We can improve this. (I expect to use 'quantity')
-        pageSize: 10000,
-    }
+      // We can improve this. (I expect to use 'quantity')
+      pageSize: 10000,
+    },
   });
 
-	const metadatasFromApiTwo = await Promise.all(
+  const metadatasFromApiTwo = await Promise.all(
     metadatasFromApi?.tokens?.map(async (metadata) => {
       return await collectionsService.getToken({
         projectId,
         collectionId: collectionId,
         tokenId: metadata.tokenId,
       });
-    })
+    }),
   );
 
-	const formmatedOriginalMetadata = metadatasFromApiTwo.filter((metadata) => metadata?.assets?.length !== 0 && metadata?.assets?.find((assetData) => assetData.metadataField === "image"));
+  const formmatedOriginalMetadata = metadatasFromApiTwo.filter(
+    (metadata) =>
+      metadata?.assets?.length !== 0 &&
+      metadata?.assets?.find(
+        (assetData) => assetData.metadataField === "image",
+      ),
+  );
   const metadatas = generateNFTsMetadata(formmatedOriginalMetadata.length);
- 
+
   const metadataStatuses = await updateTokenIds(
     metadatas,
-		formmatedOriginalMetadata,
+    formmatedOriginalMetadata,
     collectionsService,
     projectId,
     collectionId,
     projectAccessKey,
-    jwtAccessKey
+    jwtAccessKey,
   );
 
   const data = {
