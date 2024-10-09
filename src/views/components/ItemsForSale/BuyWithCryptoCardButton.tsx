@@ -35,7 +35,7 @@ interface BuyWithCryptoCardButtonProps {
 
 export const BuyWithCryptoCardButton = ({
   // tokenId,
-  collectionAddress,
+  // collectionAddress,
   chainId,
   amount,
   resetAmount,

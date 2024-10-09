@@ -5,13 +5,16 @@ import { SALES_CONTRACT_ABI } from "../../utils/primarySales/abis/salesContractA
 import { UnpackedSaleConfigurationProps } from "../../utils/primarySales/helpers";
 
 interface SaleDetailsProps {
-  paymentToken: string,
+  paymentToken: string;
 }
 
 export const useSalesCurrency = (
   saleConfiguration: UnpackedSaleConfigurationProps,
 ) => {
-  const { data: saleDetails, isLoading: paymentTokenIsLoading } : { data: SaleDetailsProps | undefined, isLoading: boolean } =
+  const {
+    data: saleDetails,
+    isLoading: paymentTokenIsLoading,
+  }: { data: SaleDetailsProps | undefined; isLoading: boolean } =
     useReadContract({
       abi: SALES_CONTRACT_ABI,
       functionName: "saleDetails",
