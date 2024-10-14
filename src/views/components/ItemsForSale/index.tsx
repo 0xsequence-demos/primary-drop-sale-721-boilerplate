@@ -4,11 +4,7 @@ import { Collectible } from "./Collectible";
 import { UnpackedSaleConfigurationProps } from "../../../utils/primarySales/helpers";
 
 interface ItemsForSaleProps {
-  collectionAddress: string;
   chainId: number;
-  totalMinted: string | undefined;
-  totalSupply: string | 0;
-  totalMintedNftsPercentaje: number;
   userPaymentCurrencyBalance: bigint | undefined;
   price: bigint;
   currencyDecimals: number | undefined;
@@ -19,11 +15,7 @@ interface ItemsForSaleProps {
 }
 
 export const ItemsForSale = ({
-  // collectionAddress,
   chainId,
-  // totalMinted,
-  // totalSupply,
-  // totalMintedNftsPercentaje,
   userPaymentCurrencyBalance,
   price,
   currencyDecimals,

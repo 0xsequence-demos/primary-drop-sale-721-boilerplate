@@ -443,12 +443,9 @@ const Connected = () => {
           </Box>
         </Collapsible>
       )}
+      
       <ItemsForSale
         chainId={saleConfiguration.chainId}
-        collectionAddress={saleConfiguration.nftTokenAddress}
-        totalMinted={formattedNftsMinted}
-        totalSupply={totalSupply}
-        totalMintedNftsPercentaje={totalMintedNftsPercentaje}
         userPaymentCurrencyBalance={userPaymentCurrencyBalance}
         price={price}
         currencyDecimals={currencyDecimals}
@@ -457,7 +454,6 @@ const Connected = () => {
         saleConfiguration={saleConfiguration}
         refetchTotalMinted={refetchTotalMinted}
       />
-
       <Button label="Disconnect" onClick={disconnect} />
     </Card>
   );
