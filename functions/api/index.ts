@@ -12,7 +12,6 @@
  */
 
 import { createPlaceholders } from "../controllers/create-placeholders";
-import { createToken } from "../controllers/create-token";
 import { updateMetadatas } from "../controllers/update-metadatas";
 
 const methodNotAllowed = (allowedMethods: string[]) => {
@@ -27,24 +26,6 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url);
     switch (url.pathname) {
-      case "/": {
-        const data = {
-          message: "Hello World!",
-          status: "success",
-        };
-
-        return new Response(JSON.stringify(data), {
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      case "/create-token": {
-        if (request.method !== "POST") {
-          return methodNotAllowed(["POST"]);
-        }
-        return createToken(request, env);
-      }
-
       case "/create-placeholders": {
         if (request.method !== "POST") {
           return methodNotAllowed(["POST"]);
