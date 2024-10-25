@@ -5,7 +5,7 @@ const alternativeAxeImage =
 const chestImage =
   "https://res.cloudinary.com/richardiral/image/upload/v1727980612/chestimage.png";
 
-export function mergeAttributes(attributes: { [key: string]: number }[]) {
+export function mergeAttributes(attributes) {
   if (attributes.length === 0) return null;
   return attributes.reduce((acc, attribute) => {
     return { ...acc, ...attribute };
@@ -51,7 +51,7 @@ export function generateAxeDescription() {
   return `This ${adjective} axe, ${origin}, ${power}.`;
 }
 
-export function generateAxeAttributes(length: number) {
+export function generateAxeAttributes(length) {
   const possibleAttributes = [
     "sharpness",
     "weight",
@@ -68,14 +68,14 @@ export function generateAxeAttributes(length: number) {
   if (length > possibleAttributes.length)
     throw new Error("Requested attributes exceed available options");
 
-  const attributes: { [key: string]: number }[] = [];
+  const attributes = [];
   const availableAttributes = [...possibleAttributes];
 
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * availableAttributes.length);
     const randomAttribute = availableAttributes.splice(randomIndex, 1)[0];
     const randomValue = Math.floor(Math.random() * 1500) + 1;
-    const attribute: { [key: string]: number } = {};
+    const attribute = {};
     attribute[randomAttribute] = randomValue;
     attributes.push(attribute);
   }
@@ -88,7 +88,7 @@ export function getRandomImage() {
   return images[Math.floor(Math.random() * images.length)];
 }
 
-export function generateNFTsMetadata(count: number) {
+export function generateNFTsMetadata(count) {
   const metadatas = Array.from({ length: count }, () => ({
     name: generateDivineAxeName(),
     description: generateAxeDescription(),
@@ -99,7 +99,7 @@ export function generateNFTsMetadata(count: number) {
   return metadatas;
 }
 
-export function generatePlaceholderMetadata(count: number) {
+export function generatePlaceholderMetadata(count) {
   const metadatas = Array.from({ length: count }, () => ({
     name: "Chest",
     description: "Placeholder NFT",
