@@ -1,8 +1,5 @@
 import { SequenceCollections } from "@0xsequence/metadata";
-import {
-  generateNFTsMetadata,
-  getRandomImage,
-} from "./utils/dataGenerators";
+import { generateNFTsMetadata, getRandomImage } from "./utils/dataGenerators";
 import { updateAsset } from "./utils/updateAsset";
 import getBodyAndKeys from "./utils/getBodyAndKeys";
 
@@ -19,11 +16,11 @@ function main() {
     projectId,
     collectionId,
     projectAccessKey,
-    jwtAccessKey
+    jwtAccessKey,
   ) {
     if (metadatas.length > 500) {
       console.log(
-        "Invalid metadatas length. Please send maximum 500 metadatas."
+        "Invalid metadatas length. Please send maximum 500 metadatas.",
       );
       return;
     }
@@ -45,7 +42,7 @@ function main() {
             tokenId,
             getRandomImage(),
             projectAccessKey,
-            jwtAccessKey
+            jwtAccessKey,
           );
 
           const updateTokenBody = {
@@ -65,7 +62,7 @@ function main() {
             tokenId: metadata.token.tokenId,
           };
         }
-      })
+      }),
     );
   }
 
@@ -86,7 +83,7 @@ function main() {
     const METADATA_URL = "https://metadata.sequence.app";
     const collectionsService = new SequenceCollections(
       METADATA_URL,
-      jwtAccessKey
+      jwtAccessKey,
     );
 
     const metadatasFromApi = await collectionsService.listTokens({
@@ -104,15 +101,15 @@ function main() {
           collectionId: collectionId,
           tokenId: metadata.tokenId,
         });
-      })
+      }),
     );
 
     const formattedOriginalMetadata = metadatasFromApiTwo.filter(
       (metadata) =>
         metadata?.assets?.length !== 0 &&
         metadata?.assets?.find(
-          (assetData) => assetData.metadataField === "image"
-        )
+          (assetData) => assetData.metadataField === "image",
+        ),
     );
     const metadatas = generateNFTsMetadata(formattedOriginalMetadata.length);
 
@@ -123,7 +120,7 @@ function main() {
       projectId,
       collectionId,
       projectAccessKey,
-      jwtAccessKey
+      jwtAccessKey,
     );
 
     const data = {

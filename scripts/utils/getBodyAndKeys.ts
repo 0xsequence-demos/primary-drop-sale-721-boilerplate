@@ -4,7 +4,9 @@ dotenv.config();
 export default function getBodyAndKeys() {
   // "IMPORTANT: Make sure to modify the keys and the request body before using this script."
 
-  const projectId = process.env.VITE_PROJECT_ID ? Number(process.env.VITE_PROJECT_ID) : null;
+  const projectId = process.env.VITE_PROJECT_ID
+    ? Number(process.env.VITE_PROJECT_ID)
+    : null;
   const keys = {
     // Your project id can be found at https://sequence.build. You’ll see it in the URL after selecting your project
     projectId,

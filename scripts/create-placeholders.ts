@@ -15,12 +15,12 @@ function main() {
     projectId,
     collectionId,
     projectAccessKey,
-    jwtAccessKey
+    jwtAccessKey,
   ) {
     if (startTokenId < 0) throw new Error("Invalid startTokenId");
     if (metadatas.length > 500) {
       throw new Error(
-        "Invalid metadatas length. Please send maximum 500 metadatas."
+        "Invalid metadatas length. Please send maximum 500 metadatas.",
       );
     }
     if (!projectId || !collectionId) {
@@ -44,7 +44,7 @@ function main() {
           });
 
           const randomTokenIDSpace = ethers.BigNumber.from(
-            ethers.utils.hexlify(ethers.utils.randomBytes(20))
+            ethers.utils.hexlify(ethers.utils.randomBytes(20)),
           );
 
           const jsonCreateAsset = await collectionsService.createAsset({
@@ -64,7 +64,7 @@ function main() {
             "8",
             image,
             projectAccessKey,
-            jwtAccessKey
+            jwtAccessKey,
           );
 
           const updateTokenBody = {
@@ -84,7 +84,7 @@ function main() {
             tokenId: index + startTokenId,
           };
         }
-      })
+      }),
     );
   }
 
@@ -106,7 +106,7 @@ function main() {
     const METADATA_URL = "https://metadata.sequence.app";
     const collectionsService = new SequenceCollections(
       METADATA_URL,
-      jwtAccessKey
+      jwtAccessKey,
     );
     const metadatas = generatePlaceholderMetadata(quantity);
     const metadataStatuses = await createTokenIds(
@@ -116,7 +116,7 @@ function main() {
       projectId,
       collectionId,
       projectAccessKey,
-      jwtAccessKey
+      jwtAccessKey,
     );
     const data = {
       message: "Created Tokens",

@@ -5,7 +5,7 @@ export const uploadAsset = async (
   tokenID,
   url,
   projectAccessKey,
-  jwtAccessKey
+  jwtAccessKey,
 ) => {
   const response = await fetch(url);
   if (!response.ok) {

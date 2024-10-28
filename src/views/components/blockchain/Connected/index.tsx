@@ -354,6 +354,7 @@ const Connected = () => {
 
               return (
                 <Box
+                  key={tokenId}
                   padding="1"
                   width="full"
                   flexDirection="column"
@@ -443,7 +444,7 @@ const Connected = () => {
           </Box>
         </Collapsible>
       )}
-      
+
       <ItemsForSale
         chainId={saleConfiguration.chainId}
         userPaymentCurrencyBalance={userPaymentCurrencyBalance}
