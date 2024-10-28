@@ -1,11 +1,11 @@
 import { SequenceCollections } from "@0xsequence/metadata";
 import { ethers } from "ethers";
-import { uploadAsset } from "./utils/uploadAsset.js";
+import { uploadAsset } from "./utils/uploadAsset";
 import {
   generatePlaceholderMetadata,
   mergeAttributes,
-} from "./utils/dataGenerators.js";
-import getBodyAndKeys from "./utils/getBodyAndKeys.js";
+} from "./utils/dataGenerators";
+import getBodyAndKeys from "./utils/getBodyAndKeys";
 
 function main() {
   async function createTokenIds(

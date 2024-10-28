@@ -2,9 +2,9 @@ import { SequenceCollections } from "@0xsequence/metadata";
 import {
   generateNFTsMetadata,
   getRandomImage,
-} from "./utils/dataGenerators.js";
-import { updateAsset } from "./utils/updateAsset.js";
-import getBodyAndKeys from "./utils/getBodyAndKeys.js";
+} from "./utils/dataGenerators";
+import { updateAsset } from "./utils/updateAsset";
+import getBodyAndKeys from "./utils/getBodyAndKeys";
 
 function main() {
   function findAssetWithImageField(data) {

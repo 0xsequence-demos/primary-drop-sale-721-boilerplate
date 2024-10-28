@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:wrangler": "wrangler dev ./functions/api/index",
-    "placeholders:create": "node scripts/create-placeholders.js",
-    "placeholders:reveal": "node scripts/reveal-placeholders.js",
+    "placeholders:create": "tsx scripts/create-placeholders.ts",
+    "placeholders:reveal": "tsx scripts/reveal-placeholders.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 && prettier --write --ignore-path .prettierignore .",
     "preview": "vite preview",
@@ -41,6 +41,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.9",
     "prettier": "^3.3.3",
+    "tsx": "^4.19.2",
     "typescript": "^5.5.4",
     "vite": "^5.4.1",
     "wrangler": "^3.78.12"
