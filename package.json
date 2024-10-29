@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:wrangler": "wrangler dev ./functions/api/index",
-    "placeholders:create": "tsx scripts/create-placeholders.ts",
-    "placeholders:reveal": "tsx scripts/reveal-placeholders.ts",
+    "create-unrevealed-tokens": "tsx scripts/create-unrevealed-tokens.ts",
+    "reveal-tokens": "tsx scripts/reveal-tokens.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
