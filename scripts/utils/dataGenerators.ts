@@ -12,14 +12,14 @@ export function mergeAttributes(attributes) {
   }, {});
 }
 
-export function generateDivineAxeName() {
+function generateDivineAxeName() {
   const suffix = Math.floor(Math.random() * 1000)
     .toString()
     .padStart(3, "0");
   return `Divine Axe #${suffix}`;
 }
 
-export function generateAxeDescription() {
+function generateAxeDescription() {
   const adjectives = [
     "mighty",
     "ancient",
@@ -51,7 +51,7 @@ export function generateAxeDescription() {
   return `This ${adjective} axe, ${origin}, ${power}.`;
 }
 
-export function generateAxeAttributes(length) {
+function generateAxeAttributes(length) {
   const possibleAttributes = [
     "sharpness",
     "weight",
@@ -68,7 +68,8 @@ export function generateAxeAttributes(length) {
   if (length > possibleAttributes.length)
     throw new Error("Requested attributes exceed available options");
 
-  const attributes = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const attributes: any[] = [];
   const availableAttributes = [...possibleAttributes];
 
   for (let i = 0; i < length; i++) {

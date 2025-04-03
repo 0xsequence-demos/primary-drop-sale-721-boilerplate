@@ -1,15 +1,18 @@
 import Home from "./views/Home";
-import { getDefaultWaasConnectors, KitProvider } from "@0xsequence/kit";
+import {
+  getDefaultChains,
+  getDefaultWaasConnectors,
+  SequenceConnectProvider,
+} from "@0xsequence/connect";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createConfig, http, WagmiProvider } from "wagmi";
-import chains from "./utils/chains";
-import { KitCheckoutProvider } from "@0xsequence/kit-checkout";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { SequenceCheckoutProvider } from "@0xsequence/checkout";
 import { Chain, Transport } from "viem";
 import { allNetworks, findNetworkConfig } from "@0xsequence/network";
-import { defaultChainId } from "./salesConfigs";
-import "@0xsequence/design-system/styles.css";
+import { Toaster } from "sonner";
+import { chainIdsFromString } from "./helpers/chainIdUtils";
+import Contexts from "./Contexts";
+import { defaultChainId } from "./configs/chains";
 
 const queryClient = new QueryClient();
 
@@ -26,13 +29,17 @@ function getTransportConfigs(
   );
 }
 
-const App = () => {
+export default function App() {
   const projectAccessKey = import.meta.env.VITE_PROJECT_ACCESS_KEY;
   const waasConfigKey = import.meta.env.VITE_WAAS_CONFIG_KEY;
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const appleClientId = import.meta.env.VITE_APPLE_CLIENT_ID;
   const appleRedirectURI = window.location.origin + window.location.pathname;
   const walletConnectId = import.meta.env.VITE_WALLET_CONNECT_ID;
+
+  const chains = chainIdsFromString(import.meta.env.VITE_CHAINS).map(
+    (id) => getDefaultChains([id])[0],
+  ) as [Chain, ...Chain[]];
 
   const connectors = getDefaultWaasConnectors({
     walletConnectProjectId: walletConnectId,
@@ -61,26 +68,15 @@ const App = () => {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <KitProvider config={kitConfig}>
-          <KitCheckoutProvider>
-            <ToastContainer
-              position="bottom-right"
-              autoClose={7000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-            <Home />
-          </KitCheckoutProvider>
-        </KitProvider>
+        <SequenceConnectProvider config={kitConfig}>
+          <SequenceCheckoutProvider>
+            <Toaster />
+            <Contexts>
+              <Home />
+            </Contexts>
+          </SequenceCheckoutProvider>
+        </SequenceConnectProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
-};
-
-export default App;
+}

@@ -1,49 +1,29 @@
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
 
-import "./Home.css";
-import NotConnected from "./components/blockchain/NotConnected";
-import { Text } from "@0xsequence/design-system";
-import Connected from "./components/blockchain/Connected";
+import { SequenceBoilerplate } from "boilerplate-design-system";
+import NotConnected from "./NotConnected";
+import Connected from "./Connected";
+import { useUserPaymentCurrencyBalancePretty } from "../hooks/useUserPaymentCurrencyBalancePretty";
 
-const Home = () => {
-  const { isConnected } = useAccount();
-
-  const Content = () => {
-    if (!isConnected) {
-      return <NotConnected />;
-    }
-
-    return <Connected />;
-  };
+export default function Home() {
+  const { isConnected, address, chainId } = useAccount();
+  const balance = useUserPaymentCurrencyBalancePretty({ address });
 
   return (
-    <div>
-      {!isConnected && (
-        <>
-          <h1>Sequence Primary Drop Sale 721 Boilerplate</h1>
-          <h2 className="homepage__marginBtNormal">Embedded Wallet</h2>
-        </>
+    <SequenceBoilerplate
+      githubUrl="https://github.com/0xsequence-demos/primary-drop-sale-721-boilerplate/"
+      name="Primary Drop Sale 721 Boilerplate"
+      description="Example of how to perform primary drop sale of 721 NFTs using Sequence."
+      docsUrl="https://docs.sequence.xyz/"
+      wagmi={{ useAccount, useDisconnect, useSwitchChain }}
+      faucetUrl="https://www.alchemy.com/faucets/polygon-amoy"
+      balance={balance ? `$${balance}` : false}
+    >
+      {isConnected && address && chainId ? (
+        <Connected userAddress={address} chainId={chainId} />
+      ) : (
+        <NotConnected />
       )}
-      <Content />
-      <footer className="homepage__footer">
-        <Text>
-          Want to learn more?{" "}
-          {/* Read the{" "}
-          <a
-            href={
-              "https://docs.sequence.xyz/solutions/wallets/sequence-kit/overview/"
-            }
-            target="_blank"
-            rel="noreferrer "
-          >
-            docs
-          </a>
-          ! */}
-          Docs Coming Soon
-        </Text>
-      </footer>
-    </div>
+    </SequenceBoilerplate>
   );
-};
-
-export default Home;
+}
