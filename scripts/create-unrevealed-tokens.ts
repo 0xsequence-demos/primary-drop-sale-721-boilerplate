@@ -43,8 +43,8 @@ function main() {
             },
           });
 
-          const randomTokenIDSpace = ethers.BigNumber.from(
-            ethers.utils.hexlify(ethers.utils.randomBytes(20)),
+          const randomTokenIDSpace = ethers.getBigInt(
+            ethers.hexlify(ethers.randomBytes(20)),
           );
 
           const jsonCreateAsset = await collectionsService.createAsset({
