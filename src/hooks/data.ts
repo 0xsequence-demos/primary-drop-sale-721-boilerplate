@@ -3,7 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useMetadataClient } from "./useMetadataClient";
 import { useIndexerClient } from "./useIndexerClient";
 import { initialChainId, nftTokenAddress } from "../configs/chains";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
+import { findSupportedNetwork } from "@0xsequence/network";
+import { isNativeCurrency } from "../helpers/isNativeCurrency";
+import { ContractInfo, SequenceMetadata } from "@0xsequence/metadata";
 
 const time = {
   oneSecond: 1 * 1000,
@@ -27,6 +30,47 @@ export const useContractInfo = (
 
       return res.contractInfo;
     },
+    retry: true,
+    staleTime: time.oneMinute * 10,
+    enabled: !!chainId && !!contractAddress,
+  });
+};
+
+const getCurrencyInfo = async (
+  chainId: number,
+  contractAddress: string,
+  metadataClient: SequenceMetadata,
+) => {
+  if (isNativeCurrency(contractAddress)) {
+    const network = findSupportedNetwork(chainId);
+    if (!network) {
+      throw new Error("Network not found");
+    }
+
+    return {
+      name: network.nativeToken.name,
+      symbol: network.nativeToken.symbol,
+      decimals: network.nativeToken.decimals,
+      logoURI: `https://assets.sequence.info/images/tokens/small/${chainId}/${zeroAddress}.webp?v=2`,
+      chainId,
+      address: zeroAddress,
+    } satisfies Partial<ContractInfo>;
+  }
+
+  const { contractInfo } = await metadataClient.getContractInfo({
+    chainID: String(chainId),
+    contractAddress,
+  });
+
+  return contractInfo;
+};
+
+export const useCurrencyInfo = (chainId: number, contractAddress: string) => {
+  const metadataClient = useMetadataClient();
+
+  return useQuery({
+    queryKey: ["currencyInfo", chainId, contractAddress],
+    queryFn: () => getCurrencyInfo(chainId, contractAddress, metadataClient),
     retry: true,
     staleTime: time.oneMinute * 10,
     enabled: !!chainId && !!contractAddress,

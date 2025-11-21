@@ -1,15 +1,14 @@
 import { useAccount } from "wagmi";
 
-import { ContractInfo } from "@0xsequence/indexer";
 import { createContext, ReactNode } from "react";
 import useCustomContext from "./useCustomContext";
-import { useContractInfo } from "../hooks/data";
+import { useCurrencyInfo } from "../hooks/data";
 import { useSaleDetails } from "./SaleDetailsContext";
 
 const SaleCurrencyContext = createContext<CurrencyInfo | undefined>(undefined);
 
 type CurrencyInfo = {
-  info: ContractInfo | undefined;
+  info: Awaited<ReturnType<typeof useCurrencyInfo>>["data"] | undefined;
   isLoading: boolean;
 };
 
@@ -19,7 +18,7 @@ export function SaleCurrencyProvider({ children }: { children: ReactNode }) {
   const {
     data: currencyContractInfo,
     isLoading: currencyContractInfoIsLoading,
-  } = useContractInfo(chainId!, saleDetails.paymentToken);
+  } = useCurrencyInfo(chainId!, saleDetails.paymentToken);
 
   return (
     <SaleCurrencyContext.Provider

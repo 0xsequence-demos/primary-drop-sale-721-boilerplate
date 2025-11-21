@@ -19,6 +19,7 @@ import { useSaleCurrency } from "../contexts/SaleCurrencyContext";
 import { initialChainId, salesContractAddress } from "../configs/chains";
 import { getChain } from "../configs/erc20/getChain";
 import { ERC721_SALE_ABI } from "../abi/sale/erc721Sale";
+import { isNativeCurrency } from "../helpers/isNativeCurrency";
 
 interface BuyWithCryptoCardButtonProps {
   amount: number;
@@ -80,19 +81,24 @@ export const BuyWithCryptoCardButton = ({
     setTxExplorerUrl("");
     setPurchasingNft(true);
 
-    const allowance = await ERC20.getAllowance(
-      currencyInfo.address,
-      userAddress,
-      salesContractAddress,
-      initialChainId,
-    );
+    const isNative = isNativeCurrency(currencyInfo.address);
 
-    if (!allowance || allowance === 0n) {
-      await ERC20.approveInfinite(
+
+    if (!isNative) {
+      const allowance = await ERC20.getAllowance(
         currencyInfo.address,
+        userAddress,
         salesContractAddress,
-        walletClient,
+        initialChainId,
       );
+
+      if (!allowance || allowance === 0n) {
+        await ERC20.approveInfinite(
+          currencyInfo.address,
+          salesContractAddress,
+          walletClient,
+        );
+      }
     }
 
     /**
@@ -122,7 +128,7 @@ export const BuyWithCryptoCardButton = ({
     const transactionParameters = {
       to: salesContractAddress,
       data: calldata,
-      value: BigInt(0),
+      value: isNative ? totalPrice : BigInt(0),
     };
 
     sendTransaction(transactionParameters);
